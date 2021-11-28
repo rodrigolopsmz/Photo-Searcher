@@ -16,7 +16,7 @@ export function Buscar (props)
     e.preventDefault();
     if (input!=='')
     {
-      if (props.panel!=='loading')
+      if (props.panel!=='loading' && props.keyText!==input.toLowerCase())
         {
           props.setSearch(input.toLowerCase())
           props.setPanel('loading')
@@ -67,6 +67,7 @@ const mapStateToProps = (state) => {
   return {
     photos: state.photoResponse,
     panel: state.panel,
+    keyText: state.keyText
   };
 };
 

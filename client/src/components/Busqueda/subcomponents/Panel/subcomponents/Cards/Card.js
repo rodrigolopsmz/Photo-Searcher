@@ -8,8 +8,6 @@ export function Card (props){
         widthEstimated = 200
         heightEstimated = 200*(props.height/props.width)
     }
-    console.log('w: '+ widthEstimated)
-    console.log('h: '+heightEstimated)
 
     return(
         <div className={styles.div}>
