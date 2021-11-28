@@ -14,7 +14,10 @@ export function Cards (props){
             }
             else if (props.panel === 'loading')
             {
-                setShow(<h1>Cargando</h1>)
+                setShow(<div>
+                    <h2> </h2>
+                    <h1>Cargando</h1>
+                    </div>)
             }
             else if (props.panel==='loaded')
             {
@@ -27,10 +30,10 @@ export function Cards (props){
                     let card1,card2
                     if ((i+indexStartPhoto)<props.photos.total)
                     {
-                        card1=<Card key={props.photos.photos[i+indexStartPhoto].id} name={props.photos.photos[i+indexStartPhoto].title} img={props.photos.photos[i+indexStartPhoto].url} id={props.photos.photos[i+indexStartPhoto].url}/>
+                        card1=<Card key={props.photos.photos[i+indexStartPhoto].id} name={props.photos.photos[i+indexStartPhoto].title} img={props.photos.photos[i+indexStartPhoto].url} id={props.photos.photos[i+indexStartPhoto].id} height={props.photos.photos[i+indexStartPhoto].height} width= {props.photos.photos[i+indexStartPhoto].width}/>
                         if ((i+1+indexStartPhoto)<props.photos.total)
                         {
-                            card2=<Card key={props.photos.photos[i+1+indexStartPhoto].id} name={props.photos.photos[i+1+indexStartPhoto].title} img={props.photos.photos[i+1+indexStartPhoto].url} id={props.photos.photos[i+1+indexStartPhoto].url}/>
+                            card2=<Card key={props.photos.photos[i+1+indexStartPhoto].id} name={props.photos.photos[i+1+indexStartPhoto].title} img={props.photos.photos[i+1+indexStartPhoto].url} id={props.photos.photos[i+1+indexStartPhoto].url} height={props.photos.photos[i+indexStartPhoto].height} width= {props.photos.photos[i+indexStartPhoto].width}/>
                         }
                         else if ((i+1+indexStartPhoto)>props.photos.total)
                         {

@@ -22,9 +22,8 @@
 }
 
 div img{
-    bottom: 5px;
-    width: 300px;
-    right: 120px;
+    bottom: 5px;    
+    left: 20px;
     position:absolute;
 }
 
