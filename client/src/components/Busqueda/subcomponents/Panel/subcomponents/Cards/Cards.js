@@ -14,9 +14,9 @@ export function Cards (props){
             }
             else if (props.panel === 'loading')
             {
-                setShow(<div>
-                    <h2> </h2>
-                    <h1>Cargando</h1>
+                setShow(<div style={{margin: '100px'} }>
+                    
+                    <h1>Cargando...</h1>
                     </div>)
             }
             else if (props.panel==='loaded')
