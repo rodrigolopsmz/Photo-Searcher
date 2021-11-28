@@ -19,7 +19,7 @@ const jsonFlickrApi= function (data)
 }
 router.use(express.json());
 router.get('/',async (req,res)=>{
-    var result = await axios(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${API_KEY}&format=json&text=${req.query.text}&extras=url_m&page=${req.query.page}`).then(r => r.data).then(r=>  {return eval(r)})
+    var result = await axios(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${API_KEY}&format=json&text=${req.query.text}&extras=url_m&page=${req.query.page}`).then(r => r.data).then(r=>  {return eval(r)}).catch(error=> console.log(error))
     var infoResolved = result.photos.photo.map(onePhoto =>  {
         var info={}
         info.url= onePhoto.url_m
