@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Buscar.module.css';
 import { connect } from 'react-redux';
-import { SET_START_INDEX,SET_SEARCH } from '../../../../../src/actions/index.js';
+import { SET_PAGINATION,SET_SEARCH, SET_PANEL, SET_PHOTO_RESPONSE } from '../../../../../src/actions/index.js';
 const axios = require("axios");
 
 export function Buscar (props)
@@ -16,32 +16,32 @@ export function Buscar (props)
     e.preventDefault();
     if (input!=='')
     {
-      var t= await axios(`http://localhost:3001/pokemons/?name=${input.toLowerCase()}`).then(res => res.json())
-      if (t.hasOwnProperty('msg')) 
-      {
-        alert(t.msg)
-        props.setSearch([])
-      }
-      else if (t.hasOwnProperty('name'))
-      {
-        var typ1=''
-        for (var j=0;j<t.types.length;j++)
-          {
-            typ1=typ1+t.types[j].charAt(0).toUpperCase() + t.types[j].slice(1)+','
-          }
-        t.typesstr=typ1.substring(0, typ1.length - 1)
-        props.setSearch([t])
-      }
+      props.setSearch(input.toLowerCase())
+      props.setPanel('loading')
+      var response= await axios(`http://localhost:3001/getPhoto?text=${input.toLowerCase()}`).then(r => r.data)
+      props.setPhotoResponse(response)
+      props.setPanel('loaded')
+      props.setPagination({
+        current:1,
+        pagesTotal:Math.ceil(response.total/6),
+        pagesLoaded: Math.ceil(response.photos.length/6)
+      })
     }
-    else if(input==='') props.setSearch([])
-    props.setIndex(0)
+    else if(input==='')
+    {
+      props.setSearch('')
+      props.setPanel('empty')
+      props.setPhotoResponse({})
+      props.setPagination({})
+    } 
+    
     
   }
     return (
         <div>
         <form className={styles.form}>
             <div>
-              <label>Busca tu Pokemon:</label>
+              <label>Busca la imagen, ingresando palabras claves de la descripcion:</label>
               <input type="text" onChange={handleInputChange} />
             </div>
             <button onClick={handleClick}>Cargar</button>
@@ -53,10 +53,17 @@ export function Buscar (props)
 const mapDispatchToProps = (dispatch) => {
   return {
 
-    setIndex: (num) => dispatch(SET_START_INDEX(num)),
-    setSearch: (obj) => dispatch(SET_SEARCH(obj))
+    setPagination: (obj) => dispatch(SET_PAGINATION(obj)),
+    setSearch: (obj) => dispatch(SET_SEARCH(obj)),
+    setPanel: (code) => dispatch(SET_PANEL(code)),
+    setPhotoResponse: (obj) => dispatch(SET_PHOTO_RESPONSE(obj)),
 
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    photos: state.photoResponse,
+  };
+};
 
-export default connect(null, mapDispatchToProps)(Buscar);
+export default connect(mapStateToProps, mapDispatchToProps)(Buscar);

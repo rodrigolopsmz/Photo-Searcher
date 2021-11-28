@@ -2,33 +2,60 @@ import React from 'react';
 import styles from './Panel.module.css';
 import { connect } from 'react-redux';
 import Cards from './subcomponents/Cards/Cards.js';
-import {SET_START_INDEX } from '../../../../actions/index.js';
+import {SET_PAGINATION,SET_PHOTO_RESPONSE, SET_PANEL } from '../../../../actions/index.js';
+const axios = require('axios');
 export function Panel (props)
 {
-  const handleClick=  function (e){
+  const handleClick=  async function (e){
     e.preventDefault();
-    if (props.lengthcards!==0)
+    if (props.panel==='loaded')
     {
-      var possibleIndex=[]
-      var s1
-      var i=0
-      while (i<props.lengthcards){
-        possibleIndex.push(i)
-        i=i+12
-      }
-      i=possibleIndex.findIndex((element) => element === props.startIndex)
 
       if (e.target.name==='next')
       { 
-        s1=i+1
-        if(possibleIndex[s1]===undefined) props.setIndex(0)
-        else props.setIndex(possibleIndex[s1])
+        if (props.pagination.current + 1 === props.pagination.pagesLoaded)
+        {
+          if (props.pagination.pagesLoaded===props.pagination.pagesTotal)
+          {
+            props.setPagination({
+              ...props.pagination,
+              current:1,
+            })
+          }
+          else if (props.pagination.pagesLoaded<props.pagination.pagesTotal)
+          {
+            props.setPanel('loading')
+            var pageSearch=props.photoResponse.page+1
+            console.log(pageSearch)
+            var response= await axios(`http://localhost:3001/getPhoto?text=${props.text}&page=${pageSearch}`).then(r => r.data)
+            var newPhotoResponse = {...props.photoResponse,page: pageSearch,photos:[...props.photoResponse.photos,...response.photos]}
+            props.setPhoto(newPhotoResponse)
+            props.setPagination({
+              ...props.pagination,
+              current:props.pagination.current+1,
+              pagesLoaded: Math.ceil(newPhotoResponse.photos.length/6)
+            })
+            props.setPanel('loaded')
+
+          }
+        }
+        else if (props.pagination.current + 1< props.pagination.pagesLoaded)
+        {
+          props.setPagination({
+            ...props.pagination,
+            current:props.pagination.current+1,
+          })
+        }
       }
       else if (e.target.name==='previous') 
       {
-        s1=i-1
-        if(possibleIndex[s1]===undefined) props.setIndex(possibleIndex[possibleIndex.length-1])
-        else props.setIndex(possibleIndex[s1])
+        if (props.pagination.current>1)
+        {
+          props.setPagination({
+            ...props.pagination,
+            current:props.pagination.current-1,
+          })
+        }
       }
     
     }
@@ -47,15 +74,18 @@ export function Panel (props)
 }
 const mapStateToProps = (state) => {
   return {
-    startIndex: state.startIndex,
-    lengthcards: state.showlength,
+    panel: state.panel,
+    pagination: state.pagination,
+    photoResponse: state.photoResponse,
+    text: state.keyText,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-
-    setIndex: (payload) => dispatch(SET_START_INDEX(payload))
+    setPanel: (text) => dispatch(SET_PANEL(text)),
+    setPagination: (payload) => dispatch(SET_PAGINATION(payload)),
+    setPhoto: (payload)=> dispatch(SET_PHOTO_RESPONSE(payload)),
 
   }
 }
