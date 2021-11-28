@@ -40,7 +40,6 @@ router.get('/',async (req,res)=>{
         pages: result.photos.pages,
         photos: infoResolved
     }
-    console.log(infoResolved)
     res.send(photoResponse)
 })
 
