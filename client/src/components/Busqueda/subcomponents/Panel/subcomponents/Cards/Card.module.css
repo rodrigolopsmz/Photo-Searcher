@@ -22,10 +22,9 @@
 }
 
 div img{
-    bottom: 1px;
-    height: 150px;
+    bottom: 5px;
     width: 300px;
-    right: 5px;
+    right: 120px;
     position:absolute;
 }
 
