@@ -23,7 +23,8 @@ router.get('/',async (req,res)=>{
     var infoResolved = result.photos.photo.map(onePhoto =>  {
         var info={}
         info.url= onePhoto.url_m
-        info.title = onePhoto.title
+        if (onePhoto.title.length>30) info.title = onePhoto.title.slice(0,30) +'...'
+        else info.title = onePhoto.title
         info.id = onePhoto.id
         info.height= onePhoto.height_m
         info.width= onePhoto.width_m
